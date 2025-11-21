@@ -19,8 +19,9 @@ class ExperienceItem(BaseModel):
 
 class ProjectItem(BaseModel):
     name: str
-    link: Optional[str] = None
-    # Allow BOTH description and bullets so we don't lose data
+    # Removed 'link' to force specific URL assignment
+    github_url: Optional[str] = None 
+    demo_url: Optional[str] = None
     description: Optional[str] = None 
     bullets: List[str] = [] 
     technologies: List[str] = []
@@ -53,3 +54,11 @@ class GapAnalysisResponse(BaseModel):
     job_title_detected: str
     match_score: int
     gaps: List[GapItem]
+
+# --- COVER LETTER STRUCTURES ---
+class CoverLetterRequest(BaseModel):
+    resume_data: Dict[str, Any]
+    job_description: str
+
+class CoverLetterResponse(BaseModel):
+    cover_letter_text: str

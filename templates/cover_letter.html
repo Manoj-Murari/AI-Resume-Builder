@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { 
+            size: letter; 
+            margin: 1in; 
+        }
+        body { font-family: "Times New Roman", serif; font-size: 11pt; color: #000; line-height: 1.4; }
+        
+        /* Matching Header */
+        h1 { font-size: 20pt; text-align: center; text-transform: uppercase; margin-bottom: 2px; font-weight: bold; }
+        .contact-info { text-align: center; font-size: 10pt; margin-bottom: 20px; border-bottom: 1px solid #000; padding-bottom: 10px; }
+        
+        /* Cover Letter Body */
+        .content { margin-top: 20px; text-align: justify; }
+        p { margin-bottom: 12px; }
+        a { color: #000; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>{{ data.personal_info.name }}</h1>
+    <div class="contact-info">
+        {% if data.personal_info.location %}
+            {{ data.personal_info.location }} | 
+        {% endif %}
+        {{ data.personal_info.phone }} | {{ data.personal_info.email }} <br/>
+        
+        {% if data.personal_info.linkedin %} <a href="{{ data.personal_info.linkedin }}">LinkedIn</a> {% endif %}
+        {% if data.personal_info.github %} | <a href="{{ data.personal_info.github }}">GitHub</a> {% endif %}
+        {% if data.personal_info.portfolio %} | <a href="{{ data.personal_info.portfolio }}">Portfolio</a> {% endif %}
+    </div>
+
+    <div class="content">
+        {{ cover_letter_html | safe }}
+    </div>
+</body>
+</html>

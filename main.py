@@ -2,9 +2,9 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Body, Response
 from fastapi.middleware.cors import CORSMiddleware
 from core.parser import parse_resume_to_json
 from core.intelligence import analyze_gaps
-from core.generator import tailor_resume
-from core.renderer import render_resume_pdf
-from core.schemas import GapAnalysisRequest, GapAnalysisResponse
+from core.generator import tailor_resume, write_cover_letter
+from core.renderer import render_resume_pdf, render_cover_letter_pdf
+from core.schemas import GapAnalysisRequest, GapAnalysisResponse, CoverLetterRequest, CoverLetterResponse
 from config import supabase
 import logging
 
@@ -14,10 +14,10 @@ app = FastAPI(title="AI Resume Builder Core")
 # --- BULLETPROOF CORS CONFIGURATION ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # Allow ALL origins (localhost, 127.0.0.1, etc.)
-    allow_credentials=False,  # Disable cookies (we use Bearer tokens anyway)
-    allow_methods=["*"],      # Allow all methods (POST, GET, OPTIONS, etc.)
-    allow_headers=["*"],      # Allow all headers (Authorization, Content-Type)
+    allow_origins=["*"],      # Allow ALL origins
+    allow_credentials=False,  # Disable cookies (we use Bearer tokens)
+    allow_methods=["*"],      # Allow all methods
+    allow_headers=["*"],      # Allow all headers
 )
 # --------------------------------------
 
@@ -68,7 +68,7 @@ async def analyze_resume_gaps(request: GapAnalysisRequest = Body(...)):
         logging.error(f"Gap Analysis Error: {e}")
         raise HTTPException(500, "Failed to analyze gaps.")
 
-# --- PHASE 3: GENERATE & RENDER ---
+# --- PHASE 3: GENERATE RESUME & RENDER ---
 @app.post("/generate-tailored")
 async def generate_tailored_resume(
     resume_data: dict = Body(...),
@@ -84,12 +84,43 @@ async def generate_tailored_resume(
 
 @app.post("/render-pdf")
 async def render_pdf(resume_data: dict = Body(...)):
+    """
+    Converts Resume JSON -> PDF (Auto-switching between Standard and Compact).
+    """
     try:
         pdf_bytes = render_resume_pdf(resume_data)
         return Response(content=pdf_bytes, media_type="application/pdf")
     except Exception as e:
         logging.error(f"PDF Rendering Error: {e}")
         raise HTTPException(500, f"Failed to render PDF: {e}")
+
+# --- PHASE 4: COVER LETTER ---
+@app.post("/generate-cover-letter", response_model=CoverLetterResponse)
+async def generate_cover_letter_endpoint(request: CoverLetterRequest = Body(...)):
+    if not request.job_description or len(request.job_description) < 50:
+        raise HTTPException(400, "Job description is too short.")
+        
+    try:
+        letter_text = write_cover_letter(request.resume_data, request.job_description)
+        return {"cover_letter_text": letter_text}
+    except Exception as e:
+        logging.error(f"Cover Letter Error: {e}")
+        raise HTTPException(500, "Failed to generate cover letter.")
+
+@app.post("/render-cover-letter-pdf")
+async def render_cover_letter_pdf_endpoint(
+    resume_data: dict = Body(...),
+    cover_letter_text: str = Body(...)
+):
+    """
+    Converts Cover Letter Text + Resume Header -> PDF.
+    """
+    try:
+        pdf_bytes = render_cover_letter_pdf(resume_data, cover_letter_text)
+        return Response(content=pdf_bytes, media_type="application/pdf")
+    except Exception as e:
+        logging.error(f"Cover Letter PDF Error: {e}")
+        raise HTTPException(500, f"Failed to render Cover Letter PDF: {e}")
 
 if __name__ == "__main__":
     import uvicorn

@@ -5,37 +5,36 @@
     <style>
         @page { 
             size: letter; 
-            margin: 0.35in; 
+            margin: 0.25in; /* Very tight margins */
         }
-        body { font-family: "Times New Roman", serif; font-size: 10pt; color: #000; line-height: 1.2; }
+        /* Compact Font Sizes */
+        body { font-family: "Times New Roman", serif; font-size: 9pt; color: #000; line-height: 1.15; }
         
-        h1 { font-size: 18pt; text-align: center; text-transform: uppercase; margin-bottom: 2px; font-weight: bold; }
-        .contact-info { text-align: center; font-size: 9pt; margin-bottom: 8px; }
+        h1 { font-size: 16pt; text-align: center; text-transform: uppercase; margin-bottom: 2px; font-weight: bold; }
+        .contact-info { text-align: center; font-size: 8pt; margin-bottom: 6px; }
         
         .section-title { 
-            font-size: 11pt; 
+            font-size: 10pt; 
             font-weight: bold; 
             text-transform: uppercase; 
             border-bottom: 1px solid #000; 
-            margin-top: 8px; 
-            margin-bottom: 4px; 
+            margin-top: 6px; 
+            margin-bottom: 3px; 
             padding-bottom: 1px;
         }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 1px; }
         td { vertical-align: top; padding: 0; }
-        .left-col { text-align: left; font-weight: bold; font-size: 10pt; }
-        .right-col { text-align: right; font-weight: bold; font-size: 10pt; }
-        .sub-left { text-align: left; font-style: italic; font-size: 10pt; }
+        .left-col { text-align: left; font-weight: bold; font-size: 9pt; }
+        .right-col { text-align: right; font-weight: bold; font-size: 9pt; }
+        .sub-left { text-align: left; font-style: italic; font-size: 9pt; }
         
-        ul { margin-top: 1px; margin-bottom: 4px; padding-left: 15px; }
-        li { margin-bottom: 1px; }
+        ul { margin-top: 0px; margin-bottom: 2px; padding-left: 12px; }
+        li { margin-bottom: 0px; }
         a { color: #000; text-decoration: none; }
         
-        .project-desc { margin-top: 2px; margin-bottom: 4px; display: block; }
-        
-        /* Link styling */
-        .proj-link { font-weight: normal; font-size: 9pt; margin-left: 5px; color: #333; text-decoration: none; }
+        .project-desc { margin-top: 1px; margin-bottom: 2px; display: block; }
+        .proj-link { font-weight: normal; font-size: 8pt; margin-left: 5px; color: #333; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -53,11 +52,11 @@
 
     {% if data.summary %}
     <div class="section-title">Professional Summary</div>
-    <p style="margin-top: 1px; margin-bottom: 6px;">{{ data.summary }}</p>
+    <p style="margin-top: 1px; margin-bottom: 4px;">{{ data.summary }}</p>
     {% endif %}
 
     <div class="section-title">Technical Skills</div>
-    <div style="margin-bottom: 6px;">
+    <div style="margin-bottom: 4px;">
         {% for category, items in data.skills.items() %}
         <b>{{ category|capitalize }}:</b> {{ items|join(', ') }}<br/>
         {% endfor %}
@@ -91,11 +90,9 @@
                 {% if proj.github_url %} 
                     <a href="{{ proj.github_url }}" class="proj-link">[GitHub]</a>
                 {% endif %}
-                
                 {% if proj.github_url and proj.demo_url %} 
-                    <span style="font-weight:normal; font-size: 9pt;"> | </span> 
+                    <span style="font-weight:normal; font-size: 8pt;"> | </span> 
                 {% endif %}
-
                 {% if proj.demo_url %} 
                     <a href="{{ proj.demo_url }}" class="proj-link">[Live Link]</a>
                 {% endif %}
@@ -114,7 +111,7 @@
     {% endif %}
 
     {% if proj.technologies %}
-    <div style="font-size: 9pt; margin-bottom: 6px;">
+    <div style="font-size: 8pt; margin-bottom: 4px;">
         <b>Technologies:</b> {{ proj.technologies|join(', ') }}
     </div>
     {% endif %}
