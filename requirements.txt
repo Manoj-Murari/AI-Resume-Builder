@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+supabase
+google-generativeai
+pymupdf
+python-multipart
+pydantic
+jinja2
+xhtml2pdf

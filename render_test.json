@@ -1,0 +1,41 @@
+{
+  "personal_info": {
+    "name": "Alex Dev",
+    "email": "alex@example.com",
+    "phone": "555-0199",
+    "location": "San Francisco, CA",
+    "linkedin": "https://linkedin.com/in/alexdev",
+    "github": "https://github.com/alexdev"
+  },
+  "summary": "Backend developer with 4 years of experience building scalable APIs.",
+  "skills": {
+    "languages": ["Python", "JavaScript", "SQL"],
+    "frameworks": ["Django", "FastAPI"],
+    "tools": ["Docker", "Kubernetes", "AWS"]
+  },
+  "experience": [
+    {
+      "company": "TechSolutions Inc.",
+      "role": "Software Engineer",
+      "dates": "2021 - Present",
+      "bullets": [
+        "Developed RESTful APIs using FastAPI.",
+        "Deployed microservices to AWS Lambda."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "TaskMaster AI",
+      "description": "An AI-powered task manager.",
+      "technologies": ["Python", "OpenAI"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "State University",
+      "degree": "B.S. Computer Science",
+      "dates": "2019"
+    }
+  ]
+}

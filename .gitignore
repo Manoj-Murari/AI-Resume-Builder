@@ -1,0 +1,19 @@
+# Create/Overwrite .gitignore
+@"
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.env
+
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+.DS_Store
+
+# Supabase / Local dev
+supabase/.branches
+supabase/.temp
+"@ | Set-Content .gitignore -Encoding UTF8

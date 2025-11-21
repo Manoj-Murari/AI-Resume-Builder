@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { 
+            size: letter; 
+            margin: 0.35in; 
+        }
+        body { font-family: "Times New Roman", serif; font-size: 10pt; color: #000; line-height: 1.2; }
+        
+        h1 { font-size: 18pt; text-align: center; text-transform: uppercase; margin-bottom: 2px; font-weight: bold; }
+        .contact-info { text-align: center; font-size: 9pt; margin-bottom: 8px; }
+        
+        .section-title { 
+            font-size: 11pt; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid #000; 
+            margin-top: 8px; 
+            margin-bottom: 4px; 
+            padding-bottom: 1px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1px; }
+        td { vertical-align: top; padding: 0; }
+        .left-col { text-align: left; font-weight: bold; font-size: 10pt; }
+        .right-col { text-align: right; font-weight: bold; font-size: 10pt; }
+        .sub-left { text-align: left; font-style: italic; font-size: 10pt; }
+        
+        ul { margin-top: 1px; margin-bottom: 4px; padding-left: 15px; }
+        li { margin-bottom: 1px; }
+        a { color: #000; text-decoration: none; }
+        
+        /* New class for description fallback */
+        .project-desc { margin-top: 2px; margin-bottom: 4px; display: block; }
+    </style>
+</head>
+<body>
+    <h1>{{ data.personal_info.name }}</h1>
+    <div class="contact-info">
+        {{ data.personal_info.location }} | {{ data.personal_info.phone }} | {{ data.personal_info.email }} <br/>
+        {% if data.personal_info.linkedin %} <a href="{{ data.personal_info.linkedin }}">LinkedIn</a> {% endif %}
+        {% if data.personal_info.github %} | <a href="{{ data.personal_info.github }}">GitHub</a> {% endif %}
+        {% if data.personal_info.portfolio %} | <a href="{{ data.personal_info.portfolio }}">Portfolio</a> {% endif %}
+    </div>
+
+    {% if data.summary %}
+    <div class="section-title">Professional Summary</div>
+    <p style="margin-top: 1px; margin-bottom: 6px;">{{ data.summary }}</p>
+    {% endif %}
+
+    <div class="section-title">Technical Skills</div>
+    <div style="margin-bottom: 6px;">
+        {% for category, items in data.skills.items() %}
+        <b>{{ category|capitalize }}:</b> {{ items|join(', ') }}<br/>
+        {% endfor %}
+    </div>
+
+    <div class="section-title">Professional Experience</div>
+    {% for job in data.experience %}
+    <table>
+        <tr>
+            <td class="left-col">{{ job.company }}</td>
+            <td class="right-col">{{ job.dates }}</td>
+        </tr>
+        <tr>
+            <td class="sub-left" colspan="2">{{ job.role }}</td>
+        </tr>
+    </table>
+    <ul>
+        {% for bullet in job.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+
+    {% if data.projects %}
+    <div class="section-title">Projects</div>
+    {% for proj in data.projects %}
+    <table>
+        <tr>
+            <td class="left-col">
+                {{ proj.name }} 
+                {% if proj.link %} -- <a href="{{ proj.link }}" style="font-weight:normal; font-size: 9pt;">(Link)</a>{% endif %}
+            </td>
+        </tr>
+    </table>
+    
+    {% if proj.bullets and proj.bullets|length > 0 %}
+        <ul>
+            {% for bullet in proj.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+    {% elif proj.description %}
+        <span class="project-desc">{{ proj.description }}</span>
+    {% endif %}
+
+    {% if proj.technologies %}
+    <div style="font-size: 9pt; margin-bottom: 6px;">
+        <b>Technologies:</b> {{ proj.technologies|join(', ') }}
+    </div>
+    {% endif %}
+    
+    {% endfor %}
+    {% endif %}
+
+    <div class="section-title">Education</div>
+    {% for edu in data.education %}
+    <table>
+        <tr>
+            <td class="left-col">{{ edu.institution }}</td>
+            <td class="right-col">{{ edu.dates }}</td>
+        </tr>
+        <tr>
+            <td class="sub-left" colspan="2">{{ edu.degree }}</td>
+        </tr>
+    </table>
+    {% endfor %}
+</body>
+</html>

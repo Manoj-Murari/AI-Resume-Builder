@@ -1,0 +1,55 @@
+{
+  "personal_info": {
+    "name": "Alex Dev",
+    "email": "alex@example.com",
+    "phone": "555-0199",
+    "linkedin": "https://linkedin.com/in/alexdev",
+    "github": "https://github.com/alexdev",
+    "portfolio": "https://alexdev.io",
+    "location": "San Francisco, CA"
+  },
+  "summary": "Senior Backend Engineer with over 4 years of experience designing scalable microservices and event-driven architectures. Proficient in Python (Django, FastAPI) with growing expertise in Go and cloud-native technologies including AWS (Lambda, S3) and Kubernetes. Proven track record of optimizing high-traffic systems and implementing container orchestration strategies to enhance deployment efficiency.",
+  "skills": {
+    "languages": ["Python", "Go", "JavaScript", "SQL"],
+    "frameworks": ["FastAPI", "Django", "Flask", "React"],
+    "tools": ["Kubernetes", "Docker", "AWS", "Apache Kafka", "PostgreSQL", "Redis", "Git"]
+  },
+  "experience": [
+    {
+      "company": "TechSolutions Inc.",
+      "role": "Software Engineer",
+      "dates": "2021 - Present",
+      "bullets": [
+        "Designed and implemented scalable RESTful microservices using Python and FastAPI, supporting high-traffic logistics operations.",
+        "Deployed serverless functions using AWS Lambda and the Serverless framework, reducing infrastructure overhead by 30%.",
+        "Managed containerized application deployments in a staging Kubernetes environment using kubectl to ensure high availability.",
+        "Optimized database queries for PostgreSQL and implemented Redis caching strategies, reducing API response times by 40%."
+      ]
+    },
+    {
+      "company": "StartUp Alpha",
+      "role": "Junior Developer",
+      "dates": "2019 - 2021",
+      "bullets": [
+        "Assisted in architecting core application services using Flask and PostgreSQL.",
+        "Integrated CI/CD pipelines using GitHub Actions to automate testing and deployment workflows.",
+        "Collaborated with frontend teams to integrate APIs and ensure seamless data flow."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "TaskMaster AI",
+      "link": "https://github.com/alexdev/taskmaster",
+      "description": "An AI-powered task management app leveraging event-driven design.",
+      "technologies": ["Python", "FastAPI", "OpenAI API", "Docker"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "State University",
+      "degree": "B.S. Computer Science",
+      "dates": "2015 - 2019"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "job_description": "We are looking for a Senior Backend Engineer. Key Responsibilities: Design microservices using Python (FastAPI) and Go. Manage Kubernetes (EKS) clusters. Architect event-driven systems using Apache Kafka. Work with AWS (Lambda, S3).",
+  "resume_data": {
+    "personal_info": { "name": "Alex Dev", "email": "alex@example.com" },
+    "summary": "Backend developer with 4 years of experience.",
+    "skills": {
+      "languages": ["Python", "JavaScript", "SQL"],
+      "frameworks": ["Django", "Flask", "React"],
+      "tools": ["Docker", "Git", "PostgreSQL", "Redis"]
+    },
+    "experience": [
+      {
+        "company": "TechSolutions",
+        "role": "Software Engineer",
+        "bullets": ["Developed RESTful APIs using Django."]
+      }
+    ]
+  }
+}
