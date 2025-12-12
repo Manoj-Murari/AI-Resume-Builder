@@ -1,410 +1,154 @@
-<div align="center">
-
 # AI Resume Builder
 
-**Intelligent. Tailored. ATS-Ready.**
+<div align="center">
 
-A standalone, AI-powered engine that transforms generic resumes into highly targeted, job-specific applications in seconds.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-v3.10+-blue.svg)
+![Node](https://img.shields.io/badge/node-v18+-green.svg)
+![React](https://img.shields.io/badge/react-v18.3-61DAFB.svg)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-[Demo](https://www.google.com/search?q=%23) · [Report Bug](https://www.google.com/search?q=https://github.com/Manoj-Murari/ai-resume-builder/issues) · [Request Feature](https://www.google.com/search?q=https://github.com/Manoj-Murari/ai-resume-builder/issues)
+**Stop sending generic resumes. Start landing interviews.**
+
+An intelligent, AI-driven platform that parses your existing resume, analyzes job descriptions, and generates perfectly tailored resumes and cover letters in seconds using Google Gemini 2.0 Flash.
+
+<br />
+
+![Demo GIF](https://via.placeholder.com/800x400?text=Replace+with+actual+demo/screenshot)
+*Replace with actual demo/screenshot*
 
 </div>
 
------
+---
 
-## 🚀 Overview
-
-**AI Resume Builder** is a full-stack application designed to bridge the gap between a candidate's profile and a target job description. Unlike static templates, this tool uses Generative AI (Google Gemini) to parse, analyze, and rewrite resume content dynamically.
-
-It features a **hybrid PDF parser** capable of extracting complex layouts (including icon-based links), an **intelligent gap analysis** engine that interviews the user to fill missing skills, and a **real-time editor** that compiles everything into a pixel-perfect, ATS-friendly PDF.
-
-## ✨ Key Features
-
-  * **📄 Smart PDF Ingestion**: Uses a custom weighted-proximity algorithm (PyMuPDF) to accurately extract text and associate "floating" icon links (GitHub/LinkedIn) with their correct project titles.
-  * **🧠 Gap Analysis Engine**: Compares your resume against a specific Job Description (JD) to identify missing hard skills and generates interview questions to help you bridge those gaps.
-  * **✍️ AI Tailoring**: Automatically rewrites your Professional Summary and Bullet Points to align with the JD's keywords and tone using Google Gemini.
-  * **🎨 Dynamic Layout Engine**:
-      * **Auto-Fit Logic**: Automatically switches between "Standard" and "Compact" templates to ensure the resume fits on a single page.
-      * **Dual-Link Support**: Correctly renders both Source Code (GitHub) and Live Demo links for technical projects.
-  * **📝 Live Split-Screen Workspace**: Edit every field, bullet, and skill in a modern sidebar while watching the PDF preview update in real-time.
-  * **✉️ Cover Letter Generator**: Instantly drafts a persuasive cover letter matching the resume's header and design style.
-
-## 🏗️ System Architecture
-
-The application follows a decoupled client-server architecture, leveraging Supabase for persistence and Google Gemini for intelligence.
+## 🏗 Technological Architecture
 
 ```mermaid
 graph TD
-    User[User] -->|Uploads PDF| Frontend[React + Vite UI]
-    Frontend -->|Multipart Request| Backend[FastAPI Server]
+    User[👤 User] -->|Upload & Interact| UI[⚛️ React Frontend (Vite)]
+    UI -->|JSON Data| API[🚀 FastAPI Backend]
     
-    subgraph "Backend Core"
-        Backend -->|Extract Text/Links| Parser[Hybrid Parser (PyMuPDF)]
-        Backend -->|Generate Content| AI[Google Gemini API]
-        Backend -->|Render PDF| Renderer[xhtml2pdf + Jinja2]
+    subgraph "AI Core 🧠"
+        API -->|Parse| PyMuPDF[PyMuPDF]
+        API -->|Analyze & Tailor| Gemini[✨ Google Gemini 2.0 Flash]
     end
     
-    subgraph "Persistence"
-        Backend -->|Store Raw Files| Storage[Supabase Storage]
-        Backend -->|Save Metadata| DB[Supabase DB]
+    subgraph "Data & Storage 💾"
+        API -->|Store Raw/Parsed| Supabase[⚡ Supabase DB & Storage]
     end
     
-    Renderer -->|Binary PDF| Frontend
+    subgraph "Rendering 🎨"
+        API -->|Generate PDF| Renderer[HTML/CSS to PDF Engine]
+        Renderer -->|Template| Jinja2[Jinja2 Templates]
+    end
+    
+    Gemini -->|Optimization Data| API
+    Supabase -->|Resume Persistence| API
+    API -->|Download PDF| User
 ```
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
-### **Backend**
+### Frontend
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-State_Management-yellow?style=for-the-badge)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
 
-  * **Framework**: Python 3.11+, FastAPI
-  * **AI/LLM**: Google Gemini (`gemini-1.5-flash` / `gemini-2.0-flash`)
-  * **PDF Processing**: `pymupdf` (Parsing), `xhtml2pdf` (Rendering)
-  * **Templating**: Jinja2
-  * **Data Validation**: Pydantic
+### Backend
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![PyMuPDF](https://img.shields.io/badge/PyMuPDF-PDF_Parsing-red?style=for-the-badge)
 
-### **Frontend**
+## 🚀 Key Features
 
-  * **Framework**: React 18 (Vite)
-  * **State Management**: Zustand (with Persistence)
-  * **Styling**: TailwindCSS v4, Framer Motion (Animations), Lucide React (Icons)
-  * **HTTP Client**: Axios
+*   **⚡️ Flash-Fast Parsing**: Instantly converts PDF resumes into structured JSON data using PyMuPDF.
+*   **🤖 AI-Powered Tailoring**: Uses Google's Gemini 2.0 Flash model to rewrite experience bullets and summaries to specifically target job descriptions.
+*   **🎯 Smart Gap Analysis**: Automatically detects missing skills or keywords from the JD and interviews you to fill those gaps.
+*   **📄 Dynamic PDF Rendering**: Intelligent templating engine that automatically switches between Standard and Compact layouts based on content length.
+*   **✍️ Auto-Cover Letter**: Generates a persuasive, role-specific cover letter matching your resume's style and tone.
 
-### **Infrastructure**
-
-  * **Database**: Supabase (PostgreSQL)
-  * **Storage**: Supabase Storage
-
-## ⚡ Installation & Setup
+## 🏁 Getting Started
 
 ### Prerequisites
+*   **Node.js**: v18.0.0 or higher
+*   **Python**: v3.10 or higher
+*   **Supabase Account**: For database and file storage
+*   **Google AI Studio Key**: For accessing Gemini models
 
-  * Python 3.10+
-  * Node.js 18+
-  * Supabase Project (URL & Service Role Key)
-  * Google Gemini API Key
+### Installation
 
-### 1\. Clone the Repository
-
-```bash
-git clone https://github.com/Manoj-Murari/ai-resume-builder.git
-cd ai-resume-builder
-```
-
-### 2\. Backend Setup
-
-```bash
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create .env file
-touch .env
-```
-
-**Configure `.env`**:
-
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_service_role_key
-GEMINI_API_KEY=your_gemini_key
-```
-
-### 3\. Frontend Setup
-
-```bash
-cd resume-builder-ui
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-### 4\. Database Setup (Supabase)
-
-Run the following SQL in your Supabase SQL Editor to initialize the schema and storage buckets:
-
-```sql
--- Create Storage Bucket
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('raw_resumes', 'raw_resumes', true) 
-ON CONFLICT (id) DO NOTHING;
-
--- Create Table
-CREATE TABLE IF NOT EXISTS public.master_resumes (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id UUID NOT NULL,
-    file_url TEXT NOT NULL,
-    parsed_data JSONB,
-    raw_text TEXT,
-    created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- Enable RLS (Public access for MVP)
-ALTER TABLE public.master_resumes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow public insert" ON public.master_resumes FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public select" ON public.master_resumes FOR SELECT USING (true);
-CREATE POLICY "Public Upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'raw_resumes');
-CREATE POLICY "Public Read" ON storage.objects FOR SELECT USING (bucket_id = 'raw_resumes');
-```
-
-## 🖥️ Running Locally
-
-1.  **Start the Backend:**
-
+1.  **Clone the repository**
     ```bash
-    # From root directory
-    uvicorn main:app --reload --port 8000
+    git clone https://github.com/yourusername/ai-resume-builder.git
+    cd ai-resume-builder
     ```
 
-2.  **Start the Frontend:**
-
+2.  **Backend Setup**
     ```bash
-    # From resume-builder-ui directory
+    # Create virtual environment
+    python -m venv .venv
+    
+    # Activate (Windows)
+    .venv\Scripts\activate
+    # Activate (Mac/Linux)
+    # source .venv/bin/activate
+    
+    # Install dependencies
+    pip install -r requirements.txt
+    ```
+
+3.  **Frontend Setup**
+    ```bash
+    cd resume-builder-ui
+    npm install
+    ```
+
+### Configuration
+
+Create a `.env` file in the root directory with the following variables:
+
+| Variable Name | Description | Required? |
+| :--- | :--- | :--- |
+| `SUPABASE_URL` | Your Supabase Project URL | ✅ Yes |
+| `SUPABASE_KEY` | Your Supabase Service Role / Anon Key | ✅ Yes |
+| `GEMINI_API_KEY` | API Key from Google AI Studio | ✅ Yes |
+
+## 💻 Usage
+
+1.  **Start the Backend Server**
+    ```bash
+    # From project root
+    uvicorn main:app --reload
+    ```
+    *Server runs at `http://localhost:8000`*
+
+2.  **Start the Frontend Client**
+    ```bash
+    # From /resume-builder-ui
     npm run dev
     ```
+    *Client runs at `http://localhost:5173`*
 
-3.  **Access the App:** Open `http://localhost:5173`.
+3.  **Build Resumes!**
+    *   Navigate to the frontend URL.
+    *   Upload your existing PDF resume.
+    *   Paste a Job Description.
+    *   Let the AI perform the magic!
 
-## 📖 Usage Guide
+## 🗺️ Project Roadmap
 
-1.  **Upload**: Drag & drop your existing PDF resume. The parser will extract contact info, skills, and projects (including icon-based links).
-2.  **Analyze**: Paste the Job Description (JD). The AI will calculate a "Match Score" and identify missing critical skills.
-3.  **Interview**: Answer 2-3 smart questions generated by the AI to fill those gaps (e.g., "Have you used Docker in production?").
-4.  **Workspace**:
-      * Review the tailored resume in the Live Editor.
-      * Edit bullet points, update links, or modify the summary.
-      * **Auto-Save**: Changes render instantly in the PDF preview.
-      * **Download**: Export the final PDF or switch tabs to generate and download a matching Cover Letter.
+- [ ] **User Authentication**: Secure individual user profiles with Supabase Auth or Auth0.
+- [ ] **Multiple Profiles**: Allow users to manage multiple base resumes (e.g., "Developer" vs "Manager").
+- [ ] **LinkedIn Import**: Direct integration to import profile data from LinkedIn URLs.
 
-## 🗺️ Roadmap
+## 🤝 Contributing
 
-  - [x] Hybrid PDF Parsing (Text + Links)
-  - [x] AI Gap Analysis & Interview Mode
-  - [x] Auto-Fit PDF Layout Engine
-  - [x] Split-Screen Real-time Editor
-  - [x] Cover Letter Generation
-  - [ ] **Integration**: Merge into main **IntelliApply** dashboard.
-  - [ ] **Authentication**: replace dummy User IDs with Supabase Auth.
-  - [ ] **Template Selection**: Add "Modern" and "Creative" PDF templates.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## 👨‍💻 Maintainers
-
-  * **Manoj Murari** - *Lead Developer*
-
------
-
-*Built with ❤️ for developers by developers.*
-\<div align="center"\>
-
-# AI Resume Builder
-
-**Intelligent. Tailored. ATS-Ready.**
-
-A standalone, AI-powered engine that transforms generic resumes into highly targeted, job-specific applications in seconds.
-
-[Demo](https://www.google.com/search?q=%23) · [Report Bug](https://www.google.com/search?q=https://github.com/Manoj-Murari/ai-resume-builder/issues) · [Request Feature](https://www.google.com/search?q=https://github.com/Manoj-Murari/ai-resume-builder/issues)
-
-\</div\>
-
------
-
-## 🚀 Overview
-
-**AI Resume Builder** is a full-stack application designed to bridge the gap between a candidate's profile and a target job description. Unlike static templates, this tool uses Generative AI (Google Gemini) to parse, analyze, and rewrite resume content dynamically.
-
-It features a **hybrid PDF parser** capable of extracting complex layouts (including icon-based links), an **intelligent gap analysis** engine that interviews the user to fill missing skills, and a **real-time editor** that compiles everything into a pixel-perfect, ATS-friendly PDF.
-
-## ✨ Key Features
-
-  * **📄 Smart PDF Ingestion**: Uses a custom weighted-proximity algorithm (PyMuPDF) to accurately extract text and associate "floating" icon links (GitHub/LinkedIn) with their correct project titles.
-  * **🧠 Gap Analysis Engine**: Compares your resume against a specific Job Description (JD) to identify missing hard skills and generates interview questions to help you bridge those gaps.
-  * **✍️ AI Tailoring**: Automatically rewrites your Professional Summary and Bullet Points to align with the JD's keywords and tone using Google Gemini.
-  * **🎨 Dynamic Layout Engine**:
-      * **Auto-Fit Logic**: Automatically switches between "Standard" and "Compact" templates to ensure the resume fits on a single page.
-      * **Dual-Link Support**: Correctly renders both Source Code (GitHub) and Live Demo links for technical projects.
-  * **📝 Live Split-Screen Workspace**: Edit every field, bullet, and skill in a modern sidebar while watching the PDF preview update in real-time.
-  * **✉️ Cover Letter Generator**: Instantly drafts a persuasive cover letter matching the resume's header and design style.
-
-## 🏗️ System Architecture
-
-The application follows a decoupled client-server architecture, leveraging Supabase for persistence and Google Gemini for intelligence.
-
-```mermaid
-graph TD
-    User[User] -->|Uploads PDF| Frontend[React + Vite UI]
-    Frontend -->|Multipart Request| Backend[FastAPI Server]
-    
-    subgraph "Backend Core"
-        Backend -->|Extract Text/Links| Parser[Hybrid Parser (PyMuPDF)]
-        Backend -->|Generate Content| AI[Google Gemini API]
-        Backend -->|Render PDF| Renderer[xhtml2pdf + Jinja2]
-    end
-    
-    subgraph "Persistence"
-        Backend -->|Store Raw Files| Storage[Supabase Storage]
-        Backend -->|Save Metadata| DB[Supabase DB]
-    end
-    
-    Renderer -->|Binary PDF| Frontend
-```
-
-## 🛠️ Tech Stack
-
-### **Backend**
-
-  * **Framework**: Python 3.11+, FastAPI
-  * **AI/LLM**: Google Gemini (`gemini-1.5-flash` / `gemini-2.0-flash`)
-  * **PDF Processing**: `pymupdf` (Parsing), `xhtml2pdf` (Rendering)
-  * **Templating**: Jinja2
-  * **Data Validation**: Pydantic
-
-### **Frontend**
-
-  * **Framework**: React 18 (Vite)
-  * **State Management**: Zustand (with Persistence)
-  * **Styling**: TailwindCSS v4, Framer Motion (Animations), Lucide React (Icons)
-  * **HTTP Client**: Axios
-
-### **Infrastructure**
-
-  * **Database**: Supabase (PostgreSQL)
-  * **Storage**: Supabase Storage
-
-## ⚡ Installation & Setup
-
-### Prerequisites
-
-  * Python 3.10+
-  * Node.js 18+
-  * Supabase Project (URL & Service Role Key)
-  * Google Gemini API Key
-
-### 1\. Clone the Repository
-
-```bash
-git clone https://github.com/Manoj-Murari/ai-resume-builder.git
-cd ai-resume-builder
-```
-
-### 2\. Backend Setup
-
-```bash
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create .env file
-touch .env
-```
-
-**Configure `.env`**:
-
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_service_role_key
-GEMINI_API_KEY=your_gemini_key
-```
-
-### 3\. Frontend Setup
-
-```bash
-cd resume-builder-ui
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-### 4\. Database Setup (Supabase)
-
-Run the following SQL in your Supabase SQL Editor to initialize the schema and storage buckets:
-
-```sql
--- Create Storage Bucket
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('raw_resumes', 'raw_resumes', true) 
-ON CONFLICT (id) DO NOTHING;
-
--- Create Table
-CREATE TABLE IF NOT EXISTS public.master_resumes (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id UUID NOT NULL,
-    file_url TEXT NOT NULL,
-    parsed_data JSONB,
-    raw_text TEXT,
-    created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- Enable RLS (Public access for MVP)
-ALTER TABLE public.master_resumes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow public insert" ON public.master_resumes FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public select" ON public.master_resumes FOR SELECT USING (true);
-CREATE POLICY "Public Upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'raw_resumes');
-CREATE POLICY "Public Read" ON storage.objects FOR SELECT USING (bucket_id = 'raw_resumes');
-```
-
-## 🖥️ Running Locally
-
-1.  **Start the Backend:**
-
-    ```bash
-    # From root directory
-    uvicorn main:app --reload --port 8000
-    ```
-
-2.  **Start the Frontend:**
-
-    ```bash
-    # From resume-builder-ui directory
-    npm run dev
-    ```
-
-3.  **Access the App:** Open `http://localhost:5173`.
-
-## 📖 Usage Guide
-
-1.  **Upload**: Drag & drop your existing PDF resume. The parser will extract contact info, skills, and projects (including icon-based links).
-2.  **Analyze**: Paste the Job Description (JD). The AI will calculate a "Match Score" and identify missing critical skills.
-3.  **Interview**: Answer 2-3 smart questions generated by the AI to fill those gaps (e.g., "Have you used Docker in production?").
-4.  **Workspace**:
-      * Review the tailored resume in the Live Editor.
-      * Edit bullet points, update links, or modify the summary.
-      * **Auto-Save**: Changes render instantly in the PDF preview.
-      * **Download**: Export the final PDF or switch tabs to generate and download a matching Cover Letter.
-
-## 🗺️ Roadmap
-
-  - [x] Hybrid PDF Parsing (Text + Links)
-  - [x] AI Gap Analysis & Interview Mode
-  - [x] Auto-Fit PDF Layout Engine
-  - [x] Split-Screen Real-time Editor
-  - [x] Cover Letter Generation
-  - [ ] **Integration**: Merge into main **IntelliApply** dashboard.
-  - [ ] **Authentication**: replace dummy User IDs with Supabase Auth.
-  - [ ] **Template Selection**: Add "Modern" and "Creative" PDF templates.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## 👨‍💻 Maintainers
-
-  * **Manoj Murari** - *Lead Developer*
-
------
-
-*Built with ❤️ for developers by developers.*
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

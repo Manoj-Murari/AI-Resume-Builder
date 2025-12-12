@@ -1,8 +1,7 @@
-# Create/Overwrite .gitignore
-@"
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 venv/
 .venv/
 .env
@@ -11,9 +10,27 @@ venv/
 node_modules/
 dist/
 .vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 .DS_Store
+
+# Temporary / Generated Files
+render_test.json
+test_gen.json
+test_payload.json
+tailored_output.json
+resume.pdf
+resume_v2.pdf
+*.timestamp-*
 
 # Supabase / Local dev
 supabase/.branches
 supabase/.temp
-"@ | Set-Content .gitignore -Encoding UTF8
+
+# Editor / System
+.vscode/
+.idea/
+.gemini/
+
+.env

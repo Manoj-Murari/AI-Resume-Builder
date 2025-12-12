@@ -11,26 +11,26 @@ export const useResumeStore = create(
       currentStep: 1,
       isLoading: false,
       error: null,
-      
+
       // Data
-      file: null, 
-      parsedResume: null, 
+      file: null,
+      parsedResume: null,
       jobDescription: '',
-      gapAnalysis: null,  
-      tailoredResume: null, 
+      gapAnalysis: null,
+      tailoredResume: null,
       pdfUrl: null,
-      
+
       coverLetter: null,
       coverLetterPdfUrl: null,
       isCoverLetterLoading: false,
-      
+
       // Edit Mode
       isEditing: false,
 
       // --- ACTIONS ---
       setJobDescription: (text) => set({ jobDescription: text }),
       setIsEditing: (isEditing) => set({ isEditing }),
-      
+
       // NEW: Navigation Action
       setStep: (step) => set({ currentStep: step }),
 
@@ -41,7 +41,7 @@ export const useResumeStore = create(
       handleFileUpload: async (acceptedFiles) => {
         const file = acceptedFiles[0];
         if (!file) return;
-        
+
         set({ isLoading: true, error: null });
         const formData = new FormData();
         formData.append('file', file);
@@ -82,7 +82,7 @@ export const useResumeStore = create(
       handleGeneration: async (gapAnswers) => {
         const { parsedResume, jobDescription } = get();
         set({ isLoading: true, error: null });
-        
+
         try {
           // 1. Generate JSON
           const genRes = await axios.post(`${API_URL}/generate-tailored`, {
@@ -112,7 +112,7 @@ export const useResumeStore = create(
 
         try {
           const pdfRes = await axios.post(`${API_URL}/render-pdf`, data, {
-            responseType: 'blob' 
+            responseType: 'blob'
           });
           const pdfBlob = new Blob([pdfRes.data], { type: 'application/pdf' });
           const url = window.URL.createObjectURL(pdfBlob);
@@ -161,12 +161,12 @@ export const useResumeStore = create(
 
       reset: () => {
         localStorage.removeItem('resume-storage');
-        set({ 
-          currentStep: 1, 
-          parsedResume: null, 
-          jobDescription: '', 
-          gapAnalysis: null, 
-          tailoredResume: null, 
+        set({
+          currentStep: 1,
+          parsedResume: null,
+          jobDescription: '',
+          gapAnalysis: null,
+          tailoredResume: null,
           pdfUrl: null,
           coverLetter: null,
           coverLetterPdfUrl: null,
@@ -177,7 +177,7 @@ export const useResumeStore = create(
     }),
     {
       name: 'resume-storage',
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         currentStep: state.currentStep,
         parsedResume: state.parsedResume,
         jobDescription: state.jobDescription,

@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "AI Resume Builder",
+    "version": "1.0",
+    "description": "Tailor your resume and generate cover letters using AI.",
+    "side_panel": {
+        "default_path": "index.html"
+    },
+    "action": {
+        "default_title": "Open AI Resume Builder"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "sidePanel"
+    ],
+    "host_permissions": [
+        "http://localhost:8000/*"
+    ]
+}
