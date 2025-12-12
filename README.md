@@ -139,6 +139,27 @@ Create a `.env` file in the root directory with the following variables:
     *   Paste a Job Description.
     *   Let the AI perform the magic!
 
+### 🧩 Chrome Extension Usage
+
+The application is designed to run as a Chrome Extension, allowing you to use it alongside job boards (LinkedIn, Indeed, etc.).
+
+1.  **Build the Extension**
+    ```bash
+    cd resume-builder-ui
+    npm run build
+    ```
+
+2.  **Load in Chrome**
+    *   Open Chrome and navigate to `chrome://extensions/`.
+    *   Enable **Developer mode** (top right).
+    *   Click **Load unpacked**.
+    *   Select the `resume-builder-ui/dist` folder.
+
+3.  **Open the Side Panel**
+    *   Pin the extension to your toolbar.
+    *   Click the extension icon to open the AI Resume Builder in the side panel while browsing job posts.
+
+
 ## 🗺️ Project Roadmap
 
 - [ ] **User Authentication**: Secure individual user profiles with Supabase Auth or Auth0.
