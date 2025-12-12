@@ -25,26 +25,26 @@ An intelligent, AI-driven platform that parses your existing resume, analyzes jo
 
 ```mermaid
 graph TD
-    User[👤 User] -->|Upload & Interact| UI[⚛️ React Frontend (Vite)]
-    UI -->|JSON Data| API[🚀 FastAPI Backend]
+    User["👤 User"] -->|"Upload & Interact"| UI["⚛️ React Frontend (Vite)"]
+    UI -->|"JSON Data"| API["🚀 FastAPI Backend"]
     
     subgraph "AI Core 🧠"
         API -->|Parse| PyMuPDF[PyMuPDF]
-        API -->|Analyze & Tailor| Gemini[✨ Google Gemini 2.0 Flash]
+        API -->|"Analyze & Tailor"| Gemini["✨ Google Gemini 2.0 Flash"]
     end
     
     subgraph "Data & Storage 💾"
-        API -->|Store Raw/Parsed| Supabase[⚡ Supabase DB & Storage]
+        API -->|"Store Raw/Parsed"| Supabase["⚡ Supabase DB & Storage"]
     end
     
     subgraph "Rendering 🎨"
-        API -->|Generate PDF| Renderer[HTML/CSS to PDF Engine]
-        Renderer -->|Template| Jinja2[Jinja2 Templates]
+        API -->|"Generate PDF"| Renderer["HTML/CSS to PDF Engine"]
+        Renderer -->|Template| Jinja2["Jinja2 Templates"]
     end
     
-    Gemini -->|Optimization Data| API
-    Supabase -->|Resume Persistence| API
-    API -->|Download PDF| User
+    Gemini -->|"Optimization Data"| API
+    Supabase -->|"Resume Persistence"| API
+    API -->|"Download PDF"| User
 ```
 
 ## 🛠 Tech Stack
