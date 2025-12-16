@@ -1,35 +1,43 @@
-
-import React from 'react';
-import { useResumeStore } from './store';
-import { AnimatePresence, motion } from 'framer-motion';
-import StepIndicator from './components/features/StepIndicator';
-import FileUpload from './components/features/FileUpload';
-import JobInput from './components/features/JobInput';
-import GapInterview from './components/features/GapInterview';
-import Workspace from './components/features/Workspace';
+import React, { useMemo } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import DashboardLayout from './components/layout/DashboardLayout';
+import ResumeBuilder from './components/features/ResumeBuilder';
+import SavedResumesList from './components/features/SavedResumesList';
+import MasterProfile from './components/features/MasterProfile';
+import Dashboard from './components/features/Dashboard';
 
 export default function App() {
-  const currentStep = useResumeStore((state) => state.currentStep);
+  const isExtension = useMemo(() => {
+    return window.location.protocol === 'chrome-extension:' || window.location.protocol === 'moz-extension:';
+  }, []);
+
+  const isDashboardMode = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('mode') === 'dashboard';
+  }, []);
+
+  // Show full app if NOT extension OR if extension AND dashboard mode is active
+  const showFullApp = !isExtension || isDashboardMode;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-sky-100 selection:text-sky-900">
-      <StepIndicator current={currentStep} />
-
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={currentStep}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="w-full"
-        >
-          {currentStep === 1 && <FileUpload />}
-          {currentStep === 2 && <JobInput />}
-          {currentStep === 3 && <GapInterview />}
-          {currentStep === 4 && <Workspace />}
-        </motion.main>
-      </AnimatePresence>
-    </div>
+    <HashRouter>
+      <Routes>
+        {!showFullApp ? (
+          // Extension Side Panel View: Keep it simple, just the builder
+          <>
+            <Route path="/" element={<ResumeBuilder isSidePanel={true} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
+        ) : (
+          // Web App View: Full Dashboard
+          <Route path="/" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="builder" element={<ResumeBuilder />} />
+            <Route path="saved" element={<SavedResumesList />} />
+            <Route path="profile" element={<MasterProfile />} />
+          </Route>
+        )}
+      </Routes>
+    </HashRouter>
   );
 }

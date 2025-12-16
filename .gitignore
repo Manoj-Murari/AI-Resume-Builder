@@ -34,3 +34,6 @@ supabase/.temp
 .gemini/
 
 .env
+*.crx
+*.pem
+test_save.py

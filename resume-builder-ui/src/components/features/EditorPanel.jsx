@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '../../store';
-import { Edit, User, FileText, Briefcase, Code, Sparkles, Plus, Trash2 } from 'lucide-react';
+import { Edit, User, FileText, Briefcase, Code, Sparkles, Plus, Trash2, Save } from 'lucide-react';
 import AccordionItem from '../ui/AccordionItem';
 import InputGroup from '../ui/InputGroup';
 import ArrayInput from '../ui/ArrayInput';
 import SkillCategoryGroup from './SkillCategoryGroup';
 import BulletListEditor from '../ui/BulletListEditor';
 
-function EditorPanel() {
+function EditorPanel({ onSave }) {
     const { tailoredResume, updateResumeData, regeneratePdf } = useResumeStore();
     const [formData, setFormData] = useState(tailoredResume);
     const [expandedSection, setExpandedSection] = useState('experience');
@@ -66,10 +66,16 @@ function EditorPanel() {
 
     return (
         <div className="h-full overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-sm">
-            <div className="p-4 border-b border-slate-200 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
+            <div className="p-4 border-b border-slate-200 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm flex justify-between items-center">
                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
                     <Edit className="w-4 h-4 text-sky-600" /> Editor
                 </h3>
+                <button
+                    onClick={onSave}
+                    className="text-xs bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 font-bold transition-colors flex items-center gap-1"
+                >
+                    <Save className="w-3 h-3" /> Save
+                </button>
             </div>
 
             <AccordionItem
@@ -107,19 +113,23 @@ function EditorPanel() {
                     <div key={idx} className="mb-6 pb-6 border-b border-slate-100 last:border-0 last:pb-0 last:mb-0">
                         <div className="flex justify-between mb-2">
                             <input className="font-bold text-slate-800 text-sm bg-transparent border-none p-0 focus:ring-0 w-full" value={job.company} onChange={(e) => {
-                                const newList = [...formData.experience]; newList[idx].company = e.target.value; setFormData({ ...formData, experience: newList });
+                                const newList = formData.experience.map((item, i) => i === idx ? { ...item, company: e.target.value } : item);
+                                setFormData({ ...formData, experience: newList });
                             }} />
                         </div>
                         <div className="grid grid-cols-2 gap-3 mb-2">
                             <input className="text-xs text-slate-500 bg-slate-50 p-1 rounded" value={job.role} onChange={(e) => {
-                                const newList = [...formData.experience]; newList[idx].role = e.target.value; setFormData({ ...formData, experience: newList });
+                                const newList = formData.experience.map((item, i) => i === idx ? { ...item, role: e.target.value } : item);
+                                setFormData({ ...formData, experience: newList });
                             }} />
                             <input className="text-xs text-slate-500 bg-slate-50 p-1 rounded text-right" value={job.dates} onChange={(e) => {
-                                const newList = [...formData.experience]; newList[idx].dates = e.target.value; setFormData({ ...formData, experience: newList });
+                                const newList = formData.experience.map((item, i) => i === idx ? { ...item, dates: e.target.value } : item);
+                                setFormData({ ...formData, experience: newList });
                             }} />
                         </div>
                         <BulletListEditor bullets={job.bullets} onChange={(newBullets) => {
-                            const newList = [...formData.experience]; newList[idx].bullets = newBullets; setFormData({ ...formData, experience: newList });
+                            const newList = formData.experience.map((item, i) => i === idx ? { ...item, bullets: newBullets } : item);
+                            setFormData({ ...formData, experience: newList });
                         }} />
                     </div>
                 ))}
@@ -135,7 +145,8 @@ function EditorPanel() {
                     <div key={idx} className="mb-6 pb-6 border-b border-slate-100 last:border-0">
                         <div className="flex justify-between mb-2">
                             <input className="font-bold text-slate-800 text-sm bg-transparent border-none p-0 focus:ring-0 w-full" value={proj.name} onChange={(e) => {
-                                const l = [...formData.projects]; l[idx].name = e.target.value; setFormData({ ...formData, projects: l });
+                                const l = formData.projects.map((item, i) => i === idx ? { ...item, name: e.target.value } : item);
+                                setFormData({ ...formData, projects: l });
                             }} />
                             <button onClick={() => {
                                 const l = formData.projects.filter((_, i) => i !== idx);
@@ -144,10 +155,12 @@ function EditorPanel() {
                         </div>
 
                         <InputGroup label="GitHub URL" value={proj.github_url} onChange={v => {
-                            const l = [...formData.projects]; l[idx].github_url = v; setFormData({ ...formData, projects: l });
+                            const l = formData.projects.map((item, i) => i === idx ? { ...item, github_url: v } : item);
+                            setFormData({ ...formData, projects: l });
                         }} />
                         <InputGroup label="Demo URL" value={proj.demo_url} onChange={v => {
-                            const l = [...formData.projects]; l[idx].demo_url = v; setFormData({ ...formData, projects: l });
+                            const l = formData.projects.map((item, i) => i === idx ? { ...item, demo_url: v } : item);
+                            setFormData({ ...formData, projects: l });
                         }} />
 
                         <ArrayInput
@@ -155,14 +168,14 @@ function EditorPanel() {
                             placeholder="React, Python, Firebase..."
                             items={proj.technologies || []}
                             onChange={list => {
-                                const l = [...formData.projects];
-                                l[idx].technologies = list;
+                                const l = formData.projects.map((item, i) => i === idx ? { ...item, technologies: list } : item);
                                 setFormData({ ...formData, projects: l });
                             }}
                         />
 
                         <BulletListEditor bullets={proj.bullets} onChange={(newBullets) => {
-                            const l = [...formData.projects]; l[idx].bullets = newBullets; setFormData({ ...formData, projects: l });
+                            const l = formData.projects.map((item, i) => i === idx ? { ...item, bullets: newBullets } : item);
+                            setFormData({ ...formData, projects: l });
                         }} />
                     </div>
                 ))}

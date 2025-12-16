@@ -1,27 +1,28 @@
-
 import React from 'react';
 import { useResumeStore } from '../../store';
 import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
+import DashboardButton from '../ui/DashboardButton';
 
 function StepIndicator({ current }) {
     const { setStep, parsedResume, gapAnalysis, tailoredResume } = useResumeStore();
 
     const isStepUnlocked = (stepIdx) => {
-        if (stepIdx === 0) return true;
-        if (stepIdx === 1) return !!parsedResume;
-        if (stepIdx === 2) return !!gapAnalysis;
-        if (stepIdx === 3) return !!tailoredResume;
+        if (stepIdx === 0) return true; // Step 1: Context (Unified)
+        if (stepIdx === 1) return !!gapAnalysis; // Step 2: Gap Review
+        if (stepIdx === 2) return !!tailoredResume; // Step 3: Editor
         return false;
     };
 
-    const steps = ['Upload', 'Analyze', 'Interview', 'Workspace'];
+    const steps = ['Context', 'Review', 'Editor'];
 
     return (
         <div className="w-full bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
-            <div className="max-w-6xl mx-auto px-4 lg:px-6 py-4">
-                <div className="flex justify-between items-center relative">
+            <div className="max-w-6xl mx-auto px-4 lg:px-6 py-4 flex items-center gap-4">
+
+                {/* Steps Container */}
+                <div className="flex-grow flex justify-between items-center relative">
                     {steps.map((label, idx) => {
                         const stepNum = idx + 1;
                         const isActive = stepNum === current;
@@ -53,9 +54,14 @@ function StepIndicator({ current }) {
                     <motion.div
                         className="absolute top-1/2 left-0 h-0.5 bg-emerald-500 -z-0"
                         initial={{ width: '0%' }}
-                        animate={{ width: `${((current - 1) / 3) * 100}%` }}
+                        animate={{ width: `${((current - 1) / 2) * 100}%` }}
                         transition={{ duration: 0.5 }}
                     />
+                </div>
+
+                {/* Dashboard Button */}
+                <div className="flex-shrink-0">
+                    <DashboardButton />
                 </div>
             </div>
         </div>

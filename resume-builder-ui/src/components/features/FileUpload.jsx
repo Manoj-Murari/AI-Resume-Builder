@@ -7,7 +7,7 @@ import { UploadCloud, Loader2, FileText, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 function FileUpload() {
-    const { handleFileUpload, isLoading, error } = useResumeStore();
+    const { handleFileUpload, isLoading, error, masterProfile } = useResumeStore();
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: handleFileUpload,
         accept: { 'application/pdf': ['.pdf'] },
@@ -50,6 +50,18 @@ function FileUpload() {
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm flex items-center justify-center gap-2 border border-red-100">
                     <AlertTriangle className="w-4 h-4" /> {error}
                 </motion.div>
+            )}
+
+            {/* Only show "Start from Master Profile" if the profile has meaningful data */}
+            {masterProfile && (Object.keys(masterProfile.skills || {}).length > 0 || (masterProfile.projects || []).length > 0) && (
+                <div className="mt-8 flex items-center justify-center">
+                    <button
+                        onClick={() => useResumeStore.getState().handleSkipUpload()}
+                        className="text-sm font-semibold text-slate-500 hover:text-sky-600 underline underline-offset-4 decoration-slate-300 hover:decoration-sky-300 transition-all"
+                    >
+                        Or start from Master Profile (No Upload) →
+                    </button>
+                </div>
             )}
         </div>
     );

@@ -3,10 +3,23 @@ import React from 'react';
 import { useResumeStore } from '../../store';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, Lock } from 'lucide-react';
 
 function JobInput() {
-    const { jobDescription, setJobDescription, handleGapAnalysis, isLoading, error } = useResumeStore();
+    const { jobDescription, setJobDescription, handleGapAnalysis, isLoading, error, masterProfile, parsedResume, setGenerationMode } = useResumeStore();
+
+    // Check if profile has enough data (e.g., at least a name or skills)
+    const hasProfile = masterProfile && (Object.keys(masterProfile.skills || {}).length > 0 || (masterProfile.projects || []).length > 0);
+
+    // Check for base resume
+    const hasBaseResume = !!parsedResume;
+
+    // Effect: If no base resume, force 'architect' mode
+    React.useEffect(() => {
+        if (!hasBaseResume && masterProfile) {
+            setGenerationMode('architect');
+        }
+    }, [hasBaseResume, masterProfile, setGenerationMode]);
 
     return (
         <div className="max-w-2xl mx-auto mt-12">
@@ -26,6 +39,31 @@ function JobInput() {
                     </div>
                 </div>
 
+                <div className="mt-6 space-y-3">
+                    <p className="text-sm font-semibold text-slate-700">Select Generation Strategy:</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <StrategyCard
+                            mode="quick"
+                            title="Quick Tailor"
+                            desc="Optimize existing resume with new categories."
+                            disabled={!hasBaseResume}
+                        />
+                        <StrategyCard
+                            mode="augmented"
+                            title="Augmented Tailor"
+                            desc="Fill gaps using Master Profile context."
+                            recommended={true}
+                            disabled={!hasProfile || !hasBaseResume}
+                        />
+                        <StrategyCard
+                            mode="architect"
+                            title="Career Architect"
+                            desc="Build from scratch using Master Profile."
+                            disabled={!hasProfile}
+                        />
+                    </div>
+                </div>
+
                 {error && <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">{error}</div>}
 
                 <Button
@@ -34,10 +72,47 @@ function JobInput() {
                     className="w-full mt-6 py-3.5 text-lg"
                     icon={isLoading ? Loader2 : ArrowRight}
                 >
-                    {isLoading ? "Analyzing Fit..." : "Analyze Compatibility"}
+                    {isLoading ? "Analyzing..." : "Analyze Compatibility"}
                 </Button>
             </motion.div>
         </div>
+    );
+}
+
+function StrategyCard({ mode, title, desc, disabled, recommended }) {
+    const { generationMode, setGenerationMode } = useResumeStore();
+    const isSelected = generationMode === mode;
+
+    return (
+        <button
+            onClick={() => !disabled && setGenerationMode(mode)}
+            disabled={disabled}
+            className={`text-left relative p-4 rounded-xl border-2 transition-all w-full ${disabled
+                ? 'opacity-50 border-slate-100 bg-slate-50 cursor-not-allowed'
+                : isSelected
+                    ? 'border-sky-500 bg-sky-50 cursor-pointer'
+                    : 'border-slate-200 hover:border-sky-300 cursor-pointer bg-white'
+                }`}
+        >
+            {recommended && !disabled && (
+                <div className="absolute -top-3 -right-2 bg-sky-600 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded-full shadow-sm">
+                    Recommended
+                </div>
+            )}
+
+            {disabled && (
+                <div className="absolute top-2 right-2 text-slate-400">
+                    <Lock size={16} />
+                </div>
+            )}
+
+            <div className="flex items-center space-x-2 mb-1">
+                <div className={`w-4 h-4 rounded-full border flex-shrink-0 ${isSelected ? 'border-sky-500 bg-sky-500' : 'border-slate-300'
+                    }`} />
+                <h3 className="font-semibold text-slate-800 text-sm">{title}</h3>
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
+        </button>
     );
 }
 

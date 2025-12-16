@@ -4,7 +4,7 @@ from config import gemini_model
 
 log = logging.getLogger(__name__)
 
-def tailor_resume(current_resume: dict, job_description: str, gap_answers: dict = None) -> dict:
+def tailor_resume(current_resume: dict, job_description: str, gap_answers: dict = None, master_profile: dict = None, generation_mode: str = "augmented") -> dict:
     
     user_context = ""
     if gap_answers:
@@ -12,27 +12,98 @@ def tailor_resume(current_resume: dict, job_description: str, gap_answers: dict 
         for skill, answer in gap_answers.items():
             user_context += f"- {skill}: {answer}\n"
 
+    master_context_str = ""
+    if master_profile:
+        # Filter relevant parts to avoid token limits if necessary, but full dump is fine for now
+        master_context_str = f"""
+    MASTER PROFILE (The complete history of the candidate):
+    {json.dumps(master_profile)}
+    """
+
+    # --- MODE SPECIFIC INSTRUCTIONS ---
+    mode_instructions = ""
+    
+    if generation_mode == "quick":
+        # Scenario 1: Quick Tailor (PDF + Dynamic Categories)
+        mode_instructions = """
+        **STRATEGY: DYNAMIC CATEGORIZATION**
+        1. **Ignore the original resume's skill categories.**
+        2. Analyze the Job Description to identify Key Technical Clusters (e.g., "Cloud & DevOps", "Frontend Engineering", "Data Pipelines").
+        3. create **NEW** category headers based on these clusters.
+        4. Re-distribute the candidate's skills into these new, JD-specific categories.
+        5. **Rewrite Experience:** strongly rewrite bullets to match JD keywords.
+        """
+
+    elif generation_mode == "architect":
+        # Scenario 2: Career Architect (Master Profile Only)
+        mode_instructions = """
+        **STRATEGY: CAREER ARCHITECT (FROM SCRATCH)**
+        1. **SOURCE OF TRUTH:** Use the `MASTER PROFILE` as your primary database.
+        2. Select the **top 3-4 Projects** from the Master Profile that are MOST relevant to this specific Job Description. Ignore irrelevant ones.
+        3. **Structure:** Create a resume structure perfect for this role.
+        4. **Skills:** Pick only the skills from the Master Profile that matter for this specific job.
+        """
+
+    else: # "augmented" (default)
+        # Scenario 3: Augmented Tailor (Hybrid / Gap Filling)
+        mode_instructions = """
+        **STRATEGY: HYBRID AUGMENTATION**
+        1. **Preserve Structure:** Keep the candidate's original resume structure and categories mostly intact (unless they are nonsensical).
+        2. **GAP FILLING (CRITICAL):**
+           - Check the `MASTER PROFILE`.
+           - If the JD requires a skill (e.g. 'Redis') that is missing from the resume but PRESENT in the Master Profile, **INJECT IT** into the appropriate section.
+           - If a relevant Project exists in the Master Profile that is better than one in the resume, **SWAP IT IN**.
+        3. **Fix Categorization:** Ensure technologies are not listed as 'Tools' if they are 'Languages' or 'Frameworks'.
+        """
+
+    # For "architect" mode, we want to rely SOLELY on the Master Profile.
+    # We might still pass current_resume for contact info extraction if needed, 
+    # but to be safe and "bold" as requested, we hide the distinct resume sections.
+    candidate_resume_str = ""
+    if generation_mode != "architect":
+        candidate_resume_str = f"""
+    CANDIDATE RESUME (Initial Draft):
+    {json.dumps(current_resume)}
+    """
+    else:
+        # Fallback: Extract Personal Info from Master Profile if possible
+        # This prevents "Hallucinated Name" issue when skipping upload
+        p_info = master_profile.get("personal_info", {}) if master_profile else {}
+        if p_info:
+             candidate_resume_str = f"""
+    CANDIDATE CONTACT INFO (Source: Master Profile):
+    Name: {p_info.get('name', 'Candidate')}
+    Email: {p_info.get('email', '')}
+    Phone: {p_info.get('phone', '')}
+    LinkedIn: {p_info.get('linkedin', '')}
+    Location: {p_info.get('location', '')}
+    Portfolio: {p_info.get('portfolio', '')}
+    """
+        else:
+            candidate_resume_str = "CANDIDATE RESUME: [IGNORED - BUILDING FROM MASTER PROFILE]"
+
     prompt = f"""
     You are an expert Resume Writer. Tailor the candidate's resume to the Job Description.
 
     JOB DESCRIPTION:
     {job_description[:4000]}
 
-    CANDIDATE RESUME (JSON):
-    {json.dumps(current_resume)}
+    {candidate_resume_str}
+
+    {master_context_str}
 
     {user_context}
 
-    TASKS:
+    YOUR INSTRUCTIONS ({generation_mode.upper()} MODE):
+    {mode_instructions}
+
+    COMMON RULES:
     1. **Rewrite Summary:** Create a powerful 3-sentence professional summary using JD keywords.
-    2. **Enhance Experience:** Rewrite existing work history bullets to highlight JD skills.
-    3. **Fix Projects:** - Ensure every project has `bullets`.
-       - **PRESERVE ALL LINKS:** Check the input JSON. If `github_url` AND `demo_url` are present, keep BOTH. Do not merge or delete them.
-       - Extract `technologies` list.
-    4. **Integrate Context:** Use user context to fill gaps.
+    2. **Projects:** Ensure every project has `bullets`. PRESERVE ALL URLs (github_url, demo_url).
+    3. **Output:** Return valid JSON matching the standard resume structure (personal_info, summary, skills, experience, projects, education).
 
     OUTPUT:
-    Return valid JSON matching the input structure.
+    Return valid JSON.
     """
 
     try:
