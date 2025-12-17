@@ -31,7 +31,7 @@ export default function ResumeBuilder({ isSidePanel = false }) {
                 >
                     {currentStep === 1 && <UnifiedInput />}
                     {currentStep === 2 && <GapInterview />}
-                    {currentStep === 3 && <Workspace />}
+                    {currentStep === 3 && <Workspace isSidePanel={isSidePanel} />}
                 </motion.main>
             </AnimatePresence>
         </div>

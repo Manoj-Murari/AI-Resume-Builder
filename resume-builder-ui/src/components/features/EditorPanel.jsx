@@ -109,7 +109,7 @@ function EditorPanel({ onSave }) {
                 isExpanded={expandedSection === 'experience'}
                 onToggle={() => setExpandedSection(expandedSection === 'experience' ? null : 'experience')}
             >
-                {formData.experience.map((job, idx) => (
+                {(formData.experience || []).map((job, idx) => (
                     <div key={idx} className="mb-6 pb-6 border-b border-slate-100 last:border-0 last:pb-0 last:mb-0">
                         <div className="flex justify-between mb-2">
                             <input className="font-bold text-slate-800 text-sm bg-transparent border-none p-0 focus:ring-0 w-full" value={job.company} onChange={(e) => {
@@ -127,7 +127,7 @@ function EditorPanel({ onSave }) {
                                 setFormData({ ...formData, experience: newList });
                             }} />
                         </div>
-                        <BulletListEditor bullets={job.bullets} onChange={(newBullets) => {
+                        <BulletListEditor bullets={job.bullets || []} onChange={(newBullets) => {
                             const newList = formData.experience.map((item, i) => i === idx ? { ...item, bullets: newBullets } : item);
                             setFormData({ ...formData, experience: newList });
                         }} />
@@ -141,7 +141,7 @@ function EditorPanel({ onSave }) {
                 isExpanded={expandedSection === 'projects'}
                 onToggle={() => setExpandedSection(expandedSection === 'projects' ? null : 'projects')}
             >
-                {formData.projects.map((proj, idx) => (
+                {(formData.projects || []).map((proj, idx) => (
                     <div key={idx} className="mb-6 pb-6 border-b border-slate-100 last:border-0">
                         <div className="flex justify-between mb-2">
                             <input className="font-bold text-slate-800 text-sm bg-transparent border-none p-0 focus:ring-0 w-full" value={proj.name} onChange={(e) => {
@@ -173,7 +173,7 @@ function EditorPanel({ onSave }) {
                             }}
                         />
 
-                        <BulletListEditor bullets={proj.bullets} onChange={(newBullets) => {
+                        <BulletListEditor bullets={proj.bullets || []} onChange={(newBullets) => {
                             const l = formData.projects.map((item, i) => i === idx ? { ...item, bullets: newBullets } : item);
                             setFormData({ ...formData, projects: l });
                         }} />
@@ -192,21 +192,38 @@ function EditorPanel({ onSave }) {
                 isExpanded={expandedSection === 'skills'}
                 onToggle={() => setExpandedSection(expandedSection === 'skills' ? null : 'skills')}
             >
-                {Object.entries(formData.skills).map(([category, items]) => (
+                {Array.isArray(formData.skills) ? (
+                    // Handle Flat Array Skills (from Profile)
                     <SkillCategoryGroup
-                        key={category}
-                        name={category}
-                        skills={items}
-                        onRename={renameCategory}
-                        onDelete={deleteCategory}
+                        name="General Skills"
+                        skills={formData.skills}
+                        onRename={() => { }} // Not supported in array mode
+                        onDelete={() => { }}
                         onSkillsChange={(list) => {
-                            setFormData(prev => ({ ...prev, skills: { ...prev.skills, [category]: list } }));
+                            setFormData(prev => ({ ...prev, skills: list }));
                         }}
                     />
-                ))}
-                <button onClick={addCategory} className="text-sm font-bold text-sky-600 flex items-center gap-1 w-full justify-center p-2 hover:bg-sky-50 rounded mt-2">
-                    <Plus className="w-4 h-4" /> Add Skill Category
-                </button>
+                ) : (
+                    // Handle Categorized Skills (Standard)
+                    Object.entries(formData.skills).map(([category, items]) => (
+                        <SkillCategoryGroup
+                            key={category}
+                            name={category}
+                            skills={items}
+                            onRename={renameCategory}
+                            onDelete={deleteCategory}
+                            onSkillsChange={(list) => {
+                                setFormData(prev => ({ ...prev, skills: { ...prev.skills, [category]: list } }));
+                            }}
+                        />
+                    ))
+                )}
+
+                {!Array.isArray(formData.skills) && (
+                    <button onClick={addCategory} className="text-sm font-bold text-sky-600 flex items-center gap-1 w-full justify-center p-2 hover:bg-sky-50 rounded mt-2">
+                        <Plus className="w-4 h-4" /> Add Skill Category
+                    </button>
+                )}
             </AccordionItem>
         </div>
     );

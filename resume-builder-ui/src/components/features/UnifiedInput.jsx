@@ -13,7 +13,7 @@ import clsx from 'clsx';
 function UnifiedInput() {
     const {
         // File Upload State
-        handleFileUpload, isLoading: isUploading, error: uploadError, masterProfile,
+        handleFileUpload, isLoading: isUploading, error: uploadError, masterProfile, fetchMasterProfile,
         // Job Input State
         jobDescription, setJobDescription, handleGapAnalysis,
         setJobMetadata, // NEW
@@ -22,6 +22,11 @@ function UnifiedInput() {
     } = useResumeStore();
 
     const [isScraping, setIsScraping] = useState(false);
+
+    // Fetch Profile on Mount
+    React.useEffect(() => {
+        fetchMasterProfile();
+    }, []);
 
     const handleAutoFill = async () => {
         // Environment Check: Are we in an extension?
@@ -55,7 +60,9 @@ function UnifiedInput() {
     });
 
     // Check availability
-    const hasProfile = masterProfile && (Object.keys(masterProfile.skills || {}).length > 0 || (masterProfile.projects || []).length > 0);
+    const skills = masterProfile?.skills || [];
+    const hasSkills = Array.isArray(skills) ? skills.length > 0 : Object.keys(skills).length > 0;
+    const hasProfile = !!masterProfile && (hasSkills || (masterProfile.projects || []).length > 0);
     const hasBaseResume = !!parsedResume;
 
     // Effect: Auto-switch strategy based on source

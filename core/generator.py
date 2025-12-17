@@ -41,7 +41,7 @@ def tailor_resume(current_resume: dict, job_description: str, gap_answers: dict 
         1. **SOURCE OF TRUTH:** Use the `MASTER PROFILE` as your primary database.
         2. Select the **top 3-4 Projects** from the Master Profile that are MOST relevant to this specific Job Description. Ignore irrelevant ones.
         3. **Structure:** Create a resume structure perfect for this role.
-        4. **Skills:** Pick only the skills from the Master Profile that matter for this specific job.
+        4. **Skills:** Pick relevant skills from the Master Profile and **Group them into categories** (e.g., Languages, Frameworks, Infrastructure) as a Dictionary.
         """
 
     else: # "augmented" (default)
@@ -99,7 +99,10 @@ def tailor_resume(current_resume: dict, job_description: str, gap_answers: dict 
 
     COMMON RULES:
     1. **Rewrite Summary:** Create a powerful 3-sentence professional summary using JD keywords.
-    2. **Projects:** Ensure every project has `bullets`. PRESERVE ALL URLs (github_url, demo_url).
+    2. **Projects & Experience:** 
+       - Ensure every entry has `bullets`. If `bullets` are empty in the source, GENERATE them from the description.
+       - **MANDATORY:** You MUST include `start_date` and `end_date` for every role. Use the dates provided in the Master Profile.
+       - **Clean Data:** Remove filenames (e.g., 'screenshot.png') and expand abbreviations (e.g., Change 'BTec' to 'B.Tech').
     3. **Output:** Return valid JSON matching the standard resume structure (personal_info, summary, skills, experience, projects, education).
 
     OUTPUT:

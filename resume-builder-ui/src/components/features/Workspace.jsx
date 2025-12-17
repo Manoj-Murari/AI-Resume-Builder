@@ -7,7 +7,7 @@ import Button from '../ui/Button';
 import EditorPanel from './EditorPanel';
 import clsx from 'clsx';
 
-function Workspace() {
+function Workspace({ isSidePanel: initialSidePanel = false }) {
     const {
         pdfUrl, tailoredResume, regeneratePdf,
         coverLetter, coverLetterPdfUrl, generateCoverLetter, isCoverLetterLoading,
@@ -102,11 +102,11 @@ function Workspace() {
     };
 
     // Detect Context (Side Panel vs Full)
-    const [isSidePanel, setIsSidePanel] = useState(false);
+    const [isSidePanel, setIsSidePanel] = useState(initialSidePanel || window.innerWidth < 1024);
 
     useEffect(() => {
         const checkWidth = () => setIsSidePanel(window.innerWidth < 1024);
-        checkWidth(); // initial
+        // checkWidth(); // initial - REMOVED to prioritize prop/initial state
         window.addEventListener('resize', checkWidth);
         return () => window.removeEventListener('resize', checkWidth);
     }, []);

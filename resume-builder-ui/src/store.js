@@ -101,20 +101,50 @@ export const useResumeStore = create(
         });
       },
 
-      // Step 2: Analyze Gaps (Transitions from Unified Input [Step 1] -> Gap Interview [Step 2])
+      // Step 2: Analyze Gaps
       handleGapAnalysis: async () => {
-        const { parsedResume, jobDescription } = get();
+        const { parsedResume, jobDescription, masterProfile, generationMode } = get();
         if (!jobDescription) return set({ error: "Please paste a Job Description." });
+
+        // Architect Mode Support: Use Master Profile if no uploaded resume
+        let analysisSource = parsedResume;
+        if (!analysisSource && masterProfile) {
+          // Map Master Profile to expected Resume Structure
+          analysisSource = {
+            personal_info: masterProfile.personal_info || {},
+            skills: masterProfile.skills || [],
+            experience: (masterProfile.experience || []).map(exp => ({
+              ...exp,
+              bullets: exp.bullets && exp.bullets.length > 0 ? exp.bullets : (exp.description ? [exp.description] : [""])
+            })),
+            projects: (masterProfile.projects || []).map(proj => ({
+              ...proj,
+              bullets: proj.bullets && proj.bullets.length > 0 ? proj.bullets : (proj.description ? [proj.description] : [""])
+            })),
+            education: masterProfile.education || [],
+            summary: masterProfile.bio || ""
+          };
+        }
+
+        if (!analysisSource) return set({ error: "No resume data found. Please upload a PDF or complete your Master Profile." });
+
+        // Update Global State with mapped profile if needed
+        if (!parsedResume && masterProfile) {
+          set({ parsedResume: analysisSource });
+        }
 
         set({ isLoading: true, error: null });
         try {
           const res = await axios.post(`${API_URL}/analyze-gaps`, {
-            resume_data: parsedResume, // Can be null now (handled by backend fix)
+            resume_data: analysisSource,
             job_description: jobDescription
           });
           set({ gapAnalysis: res.data, currentStep: 2 }); // Move to Step 2
         } catch (err) {
-          set({ error: "AI Analysis failed. Try shortening the job description." });
+          console.error(err);
+          // Detailed error message from backend if available
+          const msg = err.response?.data?.detail || "AI Analysis failed. Try shortening the job description.";
+          set({ error: msg });
         } finally {
           set({ isLoading: false });
         }

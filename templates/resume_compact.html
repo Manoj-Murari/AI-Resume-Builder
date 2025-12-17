@@ -122,9 +122,13 @@
 
     <div class="section-title">Technical Skills</div>
     <div style="margin-bottom: 4px;">
+        {% if data.skills is mapping %}
         {% for category, items in data.skills.items() %}
         <b>{{ category|capitalize }}:</b> {{ items|join(', ') }}<br />
         {% endfor %}
+        {% else %}
+        <b>Skills:</b> {{ data.skills|join(', ') }}<br />
+        {% endif %}
     </div>
 
     <div class="section-title">Professional Experience</div>

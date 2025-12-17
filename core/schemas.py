@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 
 # --- RESUME STRUCTURES ---
 class PersonalInfo(BaseModel):
@@ -48,7 +48,7 @@ class EducationItem(BaseModel):
 class ResumeSchema(BaseModel):
     personal_info: PersonalInfo
     summary: str
-    skills: List[str] # Changed from Dict to List[str] for Flat List support
+    skills: Union[List[str], Dict[str, List[str]]] # Changed to Union for Dictionary (categorized) or Flat List support
     experience: List[ExperienceItem]
     projects: List[ProjectItem]
     education: List[EducationItem]
@@ -93,7 +93,7 @@ class UserProfile(BaseModel):
     personal_info: Optional[PersonalInfo] = None
     full_name: Optional[str] = None
     bio: Optional[str] = None
-    skills: List[str] = [] # Changed to Flat List
+    skills: Union[List[str], Dict[str, List[str]]] = [] # Changed to Flat List or Dict
     experience: List[ExperienceItem] = []
     projects: List[ProjectItem] = []
     education: List[EducationItem] = []
